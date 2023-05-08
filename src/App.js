@@ -1,24 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import "./App.css";
+import { Basket } from "./components/basket/Basket";
+import { Header } from "./components/header/Header";
+import { MealSummary } from "./components/meal-summary/MealSummary";
+import { Meals } from "./components/meals/Meals";
+import { CartProvider } from "./store/cart-context";
 
 function App() {
+  const [toggle, setToggle] = useState(false);
+
+  const toggleHandler = () => {
+    setToggle((prev) => !prev);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <CartProvider>
+      <Header onToggle={toggleHandler} />
+      <MealSummary />
+      <Meals />
+      {toggle && <Basket onToggle={toggleHandler} />}
+      {/* <Basket /> */}
+    </CartProvider>
   );
 }
 
