@@ -45,6 +45,7 @@ const MyButton = styled.button`
     color: #fff;
     svg {
       fill: #fff;
+      stroke: #fff;
     }
   }
   :active {
@@ -55,7 +56,6 @@ const MyButton = styled.button`
     color: white;
     border: none;
   }
-
   svg {
     fill: ${getColor};
   }

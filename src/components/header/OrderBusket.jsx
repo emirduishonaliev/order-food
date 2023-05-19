@@ -8,8 +8,8 @@ export const OrderBasket = ({ children, onToggle, className }) => {
 
   return (
     <Button onClick={onToggle} className={className}>
-      <BasketIcon /> <OrderBasketTitile>{children}</OrderBasketTitile>{" "}
-      <OrderBasketCount>{context.totalPrice}</OrderBasketCount>
+      <BasketIcon /> <OrderBasketTitile>{children}</OrderBasketTitile>
+      <OrderBasketCount>{context.totalAmount}</OrderBasketCount>
     </Button>
   );
 };

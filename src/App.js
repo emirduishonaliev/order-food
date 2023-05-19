@@ -19,7 +19,6 @@ function App() {
       <MealSummary />
       <Meals />
       {toggle && <Basket onToggle={toggleHandler} />}
-      {/* <Basket /> */}
     </CartProvider>
   );
 }

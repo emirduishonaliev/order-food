@@ -2,6 +2,8 @@ import React, { useContext } from "react";
 import { Button } from "../UI/Button";
 import styled from "styled-components";
 import { cartContext } from "../../store/cart-context";
+import { ReactComponent as PlusIcon } from "../../assets/icons/PlusIconBasket.svg";
+import { ReactComponent as MinusIcon } from "../../assets/icons/MinusIcon.svg";
 
 export const BasketItem = ({ title, price, amount, id }) => {
   const context = useContext(cartContext);
@@ -15,20 +17,23 @@ export const BasketItem = ({ title, price, amount, id }) => {
           <span>x {amount}</span>
         </InformationBlock>
         <ButtonBlock>
-          <Button
-            borderRadius="squared"
-            onClick={() => context.decrement(id)}
-            variant="outlined"
-          >
-            -
-          </Button>
-          <Button
-            borderRadius="squared"
-            onClick={() => context.increment(id)}
-            variant="outlined"
-          >
-            +
-          </Button>
+          <BoxButton>
+            <Button
+              borderRadius="squared"
+              onClick={() => context.decrement(id, amount - 1)}
+              variant="outlined"
+              icon={<MinusIcon />}
+            ></Button>
+          </BoxButton>
+
+          <BoxButton>
+            <Button
+              borderRadius="squared"
+              onClick={() => context.increment(id, amount)}
+              variant="outlined"
+              icon={<PlusIcon />}
+            ></Button>
+          </BoxButton>
         </ButtonBlock>
       </Content>
     </Container>
@@ -73,5 +78,13 @@ const InformationBlock = styled.article`
     border: 1px solid #d6d6d6;
     border-radius: 6px;
     padding: 6px 14px;
+  }
+`;
+
+const BoxButton = styled.div`
+  &:hover svg {
+    path {
+      stroke: #fff;
+    }
   }
 `;

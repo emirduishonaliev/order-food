@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "../UI/Button";
 import styled from "styled-components";
 
-export const TotalAmount = ({ totalPrice, onClose, onOrder }) => {
+export const TotalAmount = ({ totalPrice = 0.0, onClose, onOrder }) => {
   const isOrderButton =
     totalPrice > 0 ? <Button onClick={onOrder}>Order</Button> : null;
 

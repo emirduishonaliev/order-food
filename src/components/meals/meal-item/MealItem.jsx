@@ -6,14 +6,7 @@ import { cartContext } from "../../../store/cart-context";
 export const MealItem = ({ meal }) => {
   const context = useContext(cartContext);
   function addProduct(amount) {
-    const data = {
-      title: meal.title,
-      description: meal.description,
-      price: meal.price,
-      amount: +amount,
-      id: meal.id,
-    };
-    context.addItem(data);
+    context.addItem(meal._id, amount);
   }
 
   return (

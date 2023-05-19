@@ -3,14 +3,14 @@ import styled from "styled-components";
 import SummaryImage from "../../assets/images/summary-image.png";
 import { MealSummaryCard } from "./MealSummaryCard";
 
-export const MealSummary = () => {
+export const MealSummary = React.memo(() => {
   return (
     <Container>
       <Image src={SummaryImage} alt="summary" />
       <MealSummaryCard />
     </Container>
   );
-};
+});
 
 const Container = styled.div`
   width: 100%;

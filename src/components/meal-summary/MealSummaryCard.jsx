@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-export const MealSummaryCard = () => {
+export const MealSummaryCard = React.memo(() => {
   return (
     <Container>
       <h3>Delicious Food, Delivered To You</h3>
@@ -15,7 +15,7 @@ export const MealSummaryCard = () => {
       </Paragraph>
     </Container>
   );
-};
+});
 
 const Container = styled.div`
   max-width: 854px;
@@ -36,7 +36,7 @@ const Container = styled.div`
   align-items: center;
   gap: 20px;
   padding: 36px 40px;
-  
+
   h3 {
     font-weight: 600;
     font-size: 36px;

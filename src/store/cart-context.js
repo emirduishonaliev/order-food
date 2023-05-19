@@ -1,90 +1,102 @@
-import { createContext, useReducer } from "react";
+import { createContext, useEffect, useReducer } from "react";
+import { fetchRequest } from "../lib/fetchAPI";
 
 export const cartContext = createContext({
   items: [],
   totalAmount: 0,
 });
 
-const cartReducer = (state, action) => {
-  switch (action.type) {
-    case "ADD_ITEM":
-      if (!state.length) {
-        return [action.payload];
-      }
-
-      const isExist = state.find((item) => item.title === action.payload.title);
-      if (!isExist) {
-        return [...state, action.payload];
-      }
-
-      const updatedItem = state.map((item) => {
-        if (item.id === action.payload.id) {
-          return {
-            ...item,
-            amount: item.amount + action.payload.amount,
-          };
-        }
-        return item;
-      });
-
-      return updatedItem;
-
-    case "INCREMENT":
-      const updatedIncrement = state.map((item) => {
-        if (item.id === action.payload) {
-          return {
-            ...item,
-            amount: item.amount + 1,
-          };
-        }
-        return item;
-      });
-      return updatedIncrement;
-    case "DECREMENT":
-      const updatedDecrement = state.map((item) => {
-        if (item.id === action.payload && item.amount !== 0) {
-          return {
-            ...item,
-            amount: item.amount - 1,
-          };
-        }
-        return item;
-      });
-      return updatedDecrement;
-    default:
-      return state;
+const cartReducer = (state, { type, payload }) => {
+  if (type === "ADD_ITEM") {
+    return (state = payload);
   }
+  if (type === "GET_ITEM") {
+    return (state = payload);
+  }
+  if (type === "INCREMENT") {
+    return (state = payload);
+  }
+  if (type === "DECREMENT") {
+    return (state = payload);
+  }
+
+  return state;
 };
 
 export const CartProvider = ({ children }) => {
   const [cartStateReducer, dispatch] = useReducer(cartReducer, []);
-  const totalPrice = cartStateReducer.reduce(
-    (prev, current) => prev + current.price * current.amount,
-    0
-  );
 
-  const amount = cartStateReducer.reduce(
+  const getBasket = async () => {
+    try {
+      const response = await fetchRequest(`/basket`);
+      dispatch({ type: "GET_ITEM", payload: response.items });
+    } catch (error) {
+      new Error(error);
+    }
+  };
+
+  const addItem = async (id, amount) => {
+    try {
+      const response = await fetchRequest(`/foods/${id}/addToBasket`, {
+        method: "POST",
+        body: { amount },
+      });
+      dispatch({ type: "ADD_ITEM", payload: response.items });
+      getBasket();
+    } catch (error) {
+      new Error(error);
+    }
+  };
+
+  const increment = async (id, amount) => {
+    const response = await fetchRequest(`/basketItem/${id}/update`, {
+      method: "PUT",
+      body: { amount: amount + 1 },
+    });
+
+    dispatch({ type: "INCREMENT", payload: response.items });
+  };
+
+  const decrement = async (id, amount) => {
+    if (amount !== 0) {
+      const response = await fetchRequest(`/basketItem/${id}/update`, {
+        method: "PUT",
+        body: { amount: amount },
+      });
+      dispatch({ type: "DECREMENT", payload: response.items });
+    } else {
+      try {
+        const response = await fetchRequest(`/basketItem/${id}/delete`, {
+          method: "DELETE",
+        });
+        dispatch({ type: "DECREMENT", payload: response.items });
+      } catch (error) {
+        new Error(error);
+      }
+    }
+  };
+
+  const orderAmount = cartStateReducer?.reduce(
     (prev, current) => prev + current.amount,
     0
   );
 
-  const addItem = (data) => {
-    dispatch({ type: "ADD_ITEM", payload: data });
+  const getTotalAmount = () => {
+    return cartStateReducer?.reduce(
+      (sum, { price, amount }) => sum + amount * price,
+      0
+    );
   };
 
-  const increment = (id) => {
-    dispatch({ type: "INCREMENT", payload: id });
-  };
-
-  const decrement = (id) => {
-    dispatch({ type: "DECREMENT", payload: id });
-  };
+  useEffect(() => {
+    getBasket();
+  }, []);
 
   const cartValue = {
     items: cartStateReducer,
     addItem,
-    totalAmount: totalPrice,
-    totalPrice: amount,
+    totalAmount: orderAmount,
+    getTotalAmount,
     increment,
     decrement,
   };

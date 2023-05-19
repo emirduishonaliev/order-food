@@ -7,7 +7,7 @@ export const MealItemForm = ({ inputId, onAdd }) => {
   const [amount, setAmount] = useState(1);
 
   const changeHandler = (e) => {
-    setAmount(e.target.value);
+    setAmount(+e.target.value);
   };
 
   const addItemHandler = () => {
